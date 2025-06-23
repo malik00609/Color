@@ -2,84 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Color Trading</title>
+
+  <!-- ====== BASIC STYLES ====== -->
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: white;
-      text-align: center;
-      padding: 20px;
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:linear-gradient(to right,#0f2027,#203a43,#2c5364);
+      color:#fff;
+      text-align:center;
+      padding:20px;
+      min-height:100vh;
     }
-    nav {
-      background: black;
-      padding: 10px 0;
+    /* top navigation */
+    nav{background:#000;padding:10px 0;}
+    nav a{
+      color:#fff;text-decoration:none;margin:0 15px;font-weight:bold;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
+    h1{margin:30px 0 10px;}
+
+    /* lock-screen overlay (hidden by default) */
+    #lockedOverlay{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,.95);
+      display:none;flex-direction:column;align-items:center;justify-content:center;
+      z-index:9999;
     }
-    h1 {
-      margin: 30px 0 10px;
+    /* red circle */
+    .off-circle{
+      width:280px;height:280px;border-radius:50%;background:red;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      box-shadow:0 0 40px 10px rgba(255,0,0,.6);
+      font-size:30px;font-weight:700;line-height:1.2;
     }
-    .timer-buttons button {
-      background: dodgerblue;
-      color: white;
-      padding: 12px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
+    /* PIN input + button */
+    .pin-box{margin-top:25px;display:flex;flex-direction:column;align-items:center;}
+    .pin-box input{
+      padding:12px 18px;border-radius:6px;border:none;font-size:16px;
+      width:180px;text-align:center;margin-bottom:12px;
     }
-    .timer-buttons button.active {
-      background: limegreen;
+    .pin-box button{
+      background:#332822;color:#fff;padding:10px 25px;border:none;
+      border-radius:6px;font-size:16px;cursor:pointer;
     }
-    .input-section {
-      margin-top: 20px;
-    }
-    input[type="text"] {
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-      width: 150px;
-    }
-    .result-button {
-      background: green;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      margin-left: 10px;
-      cursor: pointer;
-    }
-    .result-text {
-      margin-top: 30px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #00ff7f;
-    }
-    .links {
-      margin-top: 40px;
-    }
-    .links a {
-      display: block;
-      background: #00c851;
-      margin: 10px auto;
-      padding: 12px 20px;
-      width: 250px;
-      border-radius: 10px;
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
-    }
+    #pinResult{margin-top:6px;font-weight:bold;}
   </style>
 </head>
+
 <body>
+  <!-- ====== MAIN PAGE ====== -->
   <nav>
     <a href="#">Home</a>
     <a href="#">Color Trading</a>
@@ -88,52 +61,59 @@
   </nav>
 
   <h1>Color Trading</h1>
+  <!-- (Add more page content here if you like) -->
 
-  <div class="timer-buttons">
-    <button onclick="selectTime(this)">30 Seconds</button>
-    <button onclick="selectTime(this)">1 Minute</button>
-    <button onclick="selectTime(this)">3 Minutes</button>
-    <button onclick="selectTime(this)">5 Minutes</button>
+  <!-- ====== LOCK-SCREEN OVERLAY ====== -->
+  <div id="lockedOverlay">
+    <div class="off-circle">
+      1:20&nbsp;PM<br>OFF&nbsp;TIME
+    </div>
+
+    <div class="pin-box">
+      <input type="password" id="pinInput" placeholder="Enter PIN" />
+      <button onclick="unlockSite()">Unlock</button>
+      <div id="pinResult"></div>
+    </div>
   </div>
 
-  <div class="input-section">
-    <input type="text" id="codeInput" placeholder="Enter Code" />
-    <button class="result-button" onclick="showResult()">Show Result</button>
-  </div>
-
-  <div class="result-text" id="resultDisplay"></div>
-
-  <div class="links">
-    <a href="https://www.92lotto.club/#/register?invitationCode=62234836484" target="_blank">🎮 Play Jeeto Game</a>
-    <a href="https://whatsapp.com/channel/0029VbB00RE5fM5SO0umup1H" target="_blank">📲 Join WhatsApp Channel</a>
-  </div>
-
+  <!-- ====== SCRIPT ====== -->
   <script>
-    let currentSelection = null;
-    const fixedPattern = [
-      "BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL",
-      "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG",
-      "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
-      "SMALL", "BIG", "SMALL", "SMALL"
-    ];
-    let patternIndex = 0;
+    /* settings */
+    const CORRECT_PIN = "1740";
+    const OFF_HOUR   = 13;  // 1 PM (24-hour clock)
+    const OFF_MINUTE = 20;  // 1:20
 
-    function selectTime(btn) {
-      document.querySelectorAll('.timer-buttons button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentSelection = btn.textContent;
+    /* returns true if current time is 1:20 PM or later */
+    function isOffTime() {
+      const now = new Date();
+      const afterHour   = now.getHours()  > OFF_HOUR;
+      const atHourAfter = now.getHours() === OFF_HOUR && now.getMinutes() >= OFF_MINUTE;
+      return afterHour || atHourAfter;
     }
 
-    function showResult() {
-      if (!currentSelection) {
-        alert("Please select a time first.");
-        return;
+    /* show overlay */
+    function lockSite() {
+      document.getElementById("lockedOverlay").style.display = "flex";
+    }
+
+    /* hide overlay if PIN is correct */
+    function unlockSite() {
+      const userPIN = document.getElementById("pinInput").value.trim();
+      const msg     = document.getElementById("pinResult");
+
+      if (userPIN === CORRECT_PIN) {
+        document.getElementById("lockedOverlay").style.display = "none";
+        msg.textContent = "";
+        document.getElementById("pinInput").value = "";
+      } else {
+        msg.textContent = "❌ Incorrect PIN";
+        msg.style.color = "red";
       }
-
-      const result = fixedPattern[patternIndex];
-      document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
-      patternIndex = (patternIndex + 1) % fixedPattern.length;
     }
+
+    /* on load and then every 30 s, check the time */
+    window.onload = () => { if (isOffTime()) lockSite(); };
+    setInterval(() => { if (isOffTime()) lockSite(); }, 30000);
   </script>
 </body>
 </html>
