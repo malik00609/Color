@@ -110,12 +110,23 @@
 
   <script>
     let currentSelection = null;
+
+    // BIG/SMALL pattern (جو پہلے سے تھا)
     const fixedPattern = [
       "BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL",
       "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG",
       "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
       "SMALL", "BIG", "SMALL", "SMALL"
     ];
+
+    // RED/GREEN pattern (نیا شامل کیا گیا)
+    const colorPattern = [
+      "RED", "GREEN", "GREEN", "RED", "RED", "GREEN", "RED",
+      "GREEN", "RED", "RED", "GREEN", "GREEN", "RED", "RED",
+      "GREEN", "GREEN", "RED", "GREEN", "RED", "RED", "GREEN",
+      "RED", "GREEN", "RED", "GREEN"
+    ];
+
     let patternIndex = 0;
 
     function selectTime(btn) {
@@ -130,9 +141,12 @@
         return;
       }
 
-      const result = fixedPattern[patternIndex];
-      document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
-      patternIndex = (patternIndex + 1) % fixedPattern.length;
+      const bsResult = fixedPattern[patternIndex % fixedPattern.length];
+      const colorResult = colorPattern[patternIndex % colorPattern.length];
+
+      document.getElementById("resultDisplay").textContent = `✅ Result: ${bsResult} | ${colorResult}`;
+
+      patternIndex++;
     }
   </script>
 </body>
