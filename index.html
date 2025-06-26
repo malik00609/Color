@@ -110,12 +110,14 @@
 
   <script>
     let currentSelection = null;
+
+    // ✅ نیا پیٹرن یہاں لگا دیا گیا ہے
     const fixedPattern = [
-      "BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL",
-      "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG",
-      "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
-      "SMALL", "BIG", "SMALL", "SMALL"
+      "BIG", "SMALL", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
+      "BIG", "SMALL", "BIG", "SMALL", "SMALL", "BIG", "SMALL", "BIG",
+      "BIG", "BIG", "SMALL", "BIG", "BIG", "SMALL"
     ];
+
     let patternIndex = 0;
 
     function selectTime(btn) {
