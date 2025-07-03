@@ -1,1 +1,79 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Color Trading - Fast Results</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #141E30, #243B55);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-top: 30px;
+      font-size: 32px;
+    }
+    .timer {
+      font-size: 48px;
+      margin: 20px 0;
+    }
+    .result {
+      font-size: 36px;
+      margin-top: 30px;
+      color: #00ff7f;
+    }
+    .start-btn {
+      padding: 12px 25px;
+      font-size: 18px;
+      background: dodgerblue;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎲 Color Trading Result 🎲</h1>
+
+  <div class="timer" id="timer">--</div>
+
+  <button class="start-btn" onclick="startGame()">Start Round</button>
+
+  <div class="result" id="resultText">Result: --</div>
+
+  <script>
+    let countdown;
+    let timeLeft = 10;
+
+    function startGame() {
+      clearInterval(countdown);
+      document.getElementById('resultText').textContent = "Result: --";
+      timeLeft = 10;
+      document.getElementById('timer').textContent = timeLeft + "s";
+
+      countdown = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft + "s";
+        
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          showRandomResult();
+        }
+      }, 1000);
+    }
+
+    function showRandomResult() {
+      const results = ["BIG", "SMALL", "RED", "GREEN", "VIOLET"];
+      const randomResult = results[Math.floor(Math.random() * results.length)];
+      document.getElementById('resultText').textContent = "Result: " + randomResult;
+    }
+  </script>
+
+</body>
+</html>
