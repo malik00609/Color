@@ -38,6 +38,9 @@
       width: 250px; border-radius: 10px;
       text-decoration: none; color: white; font-weight: bold;
     }
+    .links p {
+      text-align: left; color: yellow; font-weight: bold; font-size: 18px;
+    }
     .lock-screen { font-size: 20px; color: yellow; margin-top: 20px; }
     .lock-screen input { padding: 10px; border-radius: 5px; width: 150px; }
     .lock-screen button {
@@ -74,8 +77,8 @@
   <div class="result-text" id="resultDisplay"></div>
 
   <div class="links">
-    <a href="https://www.92lotto.club/#/register?invitationCode=62234836484" target="_blank">🎮 Play Jeeto Game</a>
-    <a href="https://whatsapp.com/channel/0029VbB00RE5fM5SO0umup1H" target="_blank">📲 Join WhatsApp Channel</a>
+    <p>📢 Note: 100% winning signal ke liye humse WhatsApp par contact karein.</p>
+    <a href="https://chat.whatsapp.com/FcymX821O8h1I96kRRMcok" target="_blank">📲 Join WhatsApp Group</a>
   </div>
 </div>
 
@@ -97,7 +100,6 @@
   const fixedPattern = ["Big", "Small", "Small", "Big", "Small", "Small", "Small", "Big", "Small", "Big", "Big", "Small", "Big", "Small", "Big", "Big", "Small", "Big", "Small", "Big", "Small"];
   let patternIndex = 0;
 
-  // Timer start at first load
   const startTime = localStorage.getItem('startTime') || Date.now();
   localStorage.setItem('startTime', startTime);
 
@@ -112,7 +114,7 @@
     }
   }
 
-  setInterval(checkTime, 1000); // Check every second
+  setInterval(checkTime, 1000);
 
   function selectTime(btn) {
     document.querySelectorAll('.timer-buttons button').forEach(b => b.classList.remove('active'));
@@ -125,7 +127,6 @@
       alert("Please select a time first.");
       return;
     }
-
     const result = fixedPattern[patternIndex];
     document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
     patternIndex = (patternIndex + 1) % fixedPattern.length;
