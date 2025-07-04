@@ -69,9 +69,7 @@
   </div>  <!-- Visitor Counter -->  <div style="margin-top: 20px;">
     <div id="sfcdfgyqb6xdpwb9wp4j4jmdepr2t19ze3f"></div>
     <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=dfgyqb6xdpwb9wp4j4jmdepr2t19ze3f&down=async" async></script>
-    <noscript><a href="https://www.freecounterstat.com" title="website counter">
-      <img src="https://counter1.optistats.ovh/private/freecounterstat.php?c=dfgyqb6xdpwb9wp4j4jmdepr2t19ze3f" border="0" title="website counter" alt="website counter">
-    </a></noscript>
+    <noscript><a href="https://www.freecounterstat.com" title="website counter"><img src="https://counter1.optistats.ovh/private/freecounterstat.php?c=dfgyqb6xdpwb9wp4j4jmdepr2t19ze3f" border="0" title="website counter" alt="website counter"></a></noscript>
   </div>
 </div><!-- Lock Screen --><div id="lockScreen" class="hidden">
   <h2>⚠️ Site Closed After 24 Hours ⚠️</h2>
@@ -87,8 +85,6 @@
   let currentSelection = null;
   const fixedPattern = ["BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "SMALL"];
   let patternIndex = 0;
-  let lastResult = null;
-  let resultLock = false;
 
   const startTime = localStorage.getItem('startTime') || Date.now();
   localStorage.setItem('startTime', startTime);
@@ -118,17 +114,9 @@
       return;
     }
 
-    if (resultLock) {
-      document.getElementById("resultDisplay").textContent = `✅ Result: ${lastResult}`;
-      return;
-    }
-
-    lastResult = fixedPattern[patternIndex];
-    document.getElementById("resultDisplay").textContent = `✅ Result: ${lastResult}`;
+    const result = fixedPattern[patternIndex];
+    document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
     patternIndex = (patternIndex + 1) % fixedPattern.length;
-
-    resultLock = true;
-    setTimeout(() => { resultLock = false; }, 10000);
   }
 
   function unlock() {
