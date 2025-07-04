@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -50,40 +49,25 @@
     }
   </style>
 </head>
-<body>
-
-<div id="mainContent">
+<body><div id="mainContent">
   <nav>
     <a href="#">Home</a>
     <a href="#">Color Trading</a>
     <a href="#">Results</a>
     <a href="#">Contact</a>
-  </nav>
-
-  <h1>Color Trading</h1>
-
-  <div class="timer-buttons">
+  </nav>  <h1>Color Trading</h1>  <div class="timer-buttons">
     <button onclick="selectTime(this)">30 Seconds</button>
     <button onclick="selectTime(this)">1 Minute</button>
     <button onclick="selectTime(this)">3 Minutes</button>
     <button onclick="selectTime(this)">5 Minutes</button>
-  </div>
-
-  <div class="input-section">
+  </div>  <div class="input-section">
     <input type="text" id="codeInput" placeholder="Enter Code" />
     <button class="result-button" onclick="showResult()">Show Result</button>
-  </div>
-
-  <div class="result-text" id="resultDisplay"></div>
-
-  <div class="links">
+  </div>  <div class="result-text" id="resultDisplay"></div>  <div class="links">
     <p>📢 Note: 100% winning signal ke liye humse WhatsApp par contact karein.</p>
     <a href="https://chat.whatsapp.com/FcymX821O8h1I96kRRMcok" target="_blank">📲 Join WhatsApp Group</a>
   </div>
-</div>
-
-<!-- Lock Screen -->
-<div id="lockScreen" class="hidden">
+</div><!-- Lock Screen --><div id="lockScreen" class="hidden">
   <h2>⚠️ Site Closed After 24 Hours ⚠️</h2>
   <p>WhatsApp: <b>03165355105</b></p>
   <p>Easypaisa: <b>03319535871</b></p>
@@ -93,12 +77,12 @@
     <input type="text" id="pinInput" placeholder="Enter PIN">
     <button onclick="unlock()">Submit</button>
   </div>
-</div>
-
-<script>
+</div><script>
   let currentSelection = null;
-  const fixedPattern = ["Big", "Small", "Small", "Big", "Small", "Small", "Small", "Big", "Small", "Big", "Big", "Small", "Big", "Small", "Big", "Big", "Small", "Big", "Small", "Big", "Small"];
+  const fixedPattern = ["BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG", "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "SMALL"];
   let patternIndex = 0;
+  let lastResult = null;
+  let resultLock = false;
 
   const startTime = localStorage.getItem('startTime') || Date.now();
   localStorage.setItem('startTime', startTime);
@@ -127,9 +111,18 @@
       alert("Please select a time first.");
       return;
     }
-    const result = fixedPattern[patternIndex];
-    document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
+
+    if (resultLock) {
+      document.getElementById("resultDisplay").textContent = `✅ Result: ${lastResult}`;
+      return;
+    }
+
+    lastResult = fixedPattern[patternIndex];
+    document.getElementById("resultDisplay").textContent = `✅ Result: ${lastResult}`;
     patternIndex = (patternIndex + 1) % fixedPattern.length;
+
+    resultLock = true;
+    setTimeout(() => { resultLock = false; }, 10000);
   }
 
   function unlock() {
@@ -142,7 +135,5 @@
       alert("❌ Wrong PIN. Please try again.");
     }
   }
-</script>
-
-</body>
+</script></body>
 </html>
