@@ -78,8 +78,17 @@
       color: #00ff99;
     }
 
-    .links {
+    .note {
+      background: #d63031;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: bold;
       margin-top: 40px;
+    }
+
+    .links {
+      margin-top: 20px;
     }
 
     .links a {
@@ -119,6 +128,11 @@
 
   <div class="result-text" id="resultDisplay"></div>
 
+  <!-- Note Section -->
+  <div class="note">
+    جس کو 100% ورکنگ ہیک چاہیے وہ گروپ جوائن کرے👇
+  </div>
+
   <div class="links">
     <a href="https://chat.whatsapp.com/Lr9SzhW6a9x2WqG3LKTax3?mode=ac_c" target="_blank">💬 Join WhatsApp Group</a>
   </div>
@@ -126,10 +140,9 @@
   <script>
     let currentSelection = null;
     const fixedPattern = [
-      "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL",
-      "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG",
-      "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
-      "SMALL", "BIG", "SMALL", "SMALL"
+      "SMALL", "BIG", "BIG", "SMALL", "SMALL", "BIG",
+      "SMALL", "BIG", "BIG", "SMALL", "BIG", "SMALL",
+      "SMALL", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG"
     ];
     let patternIndex = 0;
 
@@ -149,7 +162,9 @@
       document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
       patternIndex = (patternIndex + 1) % fixedPattern.length;
 
-      document.querySelector(".result-button").classList.add("clicked");
+      const button = document.querySelector(".result-button");
+      button.classList.add("clicked");
+      setTimeout(() => button.classList.remove("clicked"), 1000);
     }
   </script>
 </body>
