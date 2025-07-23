@@ -3,43 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Color Trading (PIN Protected)</title>
+  <title>Color Trading</title>
   <style>
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background: #121212;
       color: white;
-      font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
     }
 
-    #pinLock {
-      margin-top: 80px;
+    nav {
+      background: #1f1f1f;
+      padding: 10px 0;
     }
 
-    input[type="password"] {
-      padding: 10px;
-      font-size: 18px;
-      border-radius: 8px;
-      border: none;
-      width: 120px;
-      text-align: center;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #00b894;
+    nav a {
       color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 30px 0 10px;
+    }
+
+    .timer-buttons button {
+      background: #6c5ce7;
+      color: white;
+      padding: 12px 20px;
+      margin: 10px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      margin-left: 10px;
     }
 
-    .error {
-      color: #ff7675;
-      margin-top: 10px;
+    .timer-buttons button.active {
+      background: #5a4ccf;
+    }
+
+    .input-section {
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      width: 150px;
+    }
+
+    .result-button {
+      background: #00b894;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .result-button.clicked {
+      background: #6c5ce7;
+    }
+
+    .result-text {
+      margin-top: 30px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ff99;
     }
 
     .note {
@@ -50,7 +86,6 @@
       font-size: 14px;
       font-weight: 500;
       margin-top: 30px;
-      display: inline-block;
     }
 
     .links {
@@ -69,52 +104,166 @@
       font-weight: bold;
     }
 
-    #mainContent {
+    .game-link {
+      background: #e17055;
+    }
+
+    #pinOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000000d9;
       display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #pinOverlay input {
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      width: 150px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #pinOverlay button {
+      padding: 10px 20px;
+      background: #00b894;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #pinError {
+      color: red;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <!-- WhatsApp Note & Link -->
-  <div class="note">WhatsApp kro: 03319535871</div>
+  <div id="pinOverlay">
+    <input type="password" id="pinInput" maxlength="4" placeholder="Enter PIN" />
+    <button onclick="checkPIN()">Submit</button>
+    <div id="pinError"></div>
+  </div>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Color Trading</a>
+    <a href="#">Results</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <h1>Color Trading</h1>
+
+  <div class="timer-buttons">
+    <button onclick="selectTime(this)">30 Seconds</button>
+    <button onclick="selectTime(this)">1 Minute</button>
+    <button onclick="selectTime(this)">3 Minutes</button>
+    <button onclick="selectTime(this)">5 Minutes</button>
+  </div>
+
+  <div class="input-section">
+    <input type="text" id="codeInput" placeholder="Enter Code" />
+    <button class="result-button" onclick="showResult()">Show Result</button>
+  </div>
+
+  <div class="result-text" id="resultDisplay"></div>
+
+  <div class="note">
+    For 100% working trick, join the group below 👇
+  </div>
+
   <div class="links">
     <a href="https://chat.whatsapp.com/Lr9SzhW6a9x2WqG3LKTax3?mode=ac_c" target="_blank">💬 Join WhatsApp Group</a>
-  </div>
-
-  <!-- PIN Lock Section -->
-  <div id="pinLock">
-    <h2>Enter PIN Code</h2>
-    <input type="password" id="pinInput" maxlength="4" placeholder="****" />
-    <button onclick="checkPIN()">Unlock</button>
-    <div class="error" id="pinError"></div>
-  </div>
-
-  <!-- Main Content (Hidden initially) -->
-  <div id="mainContent">
-    <h1>Welcome to Color Trading</h1>
-    <p>You have successfully unlocked the page with PIN <strong>1470</strong>.</p>
-
-    <!-- Example Game Link -->
-    <a href="https://www.92coco.fan/#/register?invitationCode=13163791387" target="_blank" style="display:inline-block; margin-top:20px; background:#e17055; padding:12px 20px; border-radius:8px; text-decoration:none; color:white;">🎮 Go to Game</a>
+    <a href="https://www.92coco.fan/#/register?invitationCode=13163791387" target="_blank" class="game-link">🎮 Play Game Now</a>
   </div>
 
   <script>
-    const correctPIN = "1470";
+    let currentSelection = null;
+
+    const fixedPattern = [
+      "SMALL", "BIG", "BIG", "SMALL", "SMALL", "BIG",
+      "SMALL", "BIG", "BIG", "SMALL", "BIG", "SMALL",
+      "SMALL", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG"
+    ];
+
+    const secondaryPattern = [
+      "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL",
+      "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG",
+      "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
+      "SMALL", "BIG", "SMALL", "SMALL"
+    ];
+
+    let fixedIndex = 0;
+    let secondaryIndex = 0;
+
+    function selectTime(btn) {
+      document.querySelectorAll('.timer-buttons button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSelection = btn.textContent;
+    }
+
+    function showResult() {
+      if (!currentSelection) {
+        alert("Please select a time first.");
+        return;
+      }
+
+      let result = "";
+
+      if (currentSelection === "1 Minute" || currentSelection === "5 Minutes") {
+        result = fixedPattern[fixedIndex];
+        fixedIndex = (fixedIndex + 1) % fixedPattern.length;
+      } else if (currentSelection === "3 Minutes" || currentSelection === "30 Seconds") {
+        result = secondaryPattern[secondaryIndex];
+        secondaryIndex = (secondaryIndex + 1) % secondaryPattern.length;
+      } else {
+        alert("Invalid selection.");
+        return;
+      }
+
+      document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
+
+      const button = document.querySelector(".result-button");
+      button.classList.add("clicked");
+      setTimeout(() => button.classList.remove("clicked"), 1000);
+    }
+
+    // PIN Overlay Logic
+    const pin = "1470";
 
     function checkPIN() {
-      const pin = document.getElementById("pinInput").value;
+      const input = document.getElementById("pinInput").value;
       const error = document.getElementById("pinError");
-
-      if (pin === correctPIN) {
-        document.getElementById("pinLock").style.display = "none";
-        document.getElementById("mainContent").style.display = "block";
+      if (input === pin) {
+        document.getElementById("pinOverlay").style.display = "none";
       } else {
-        error.textContent = "❌ Incorrect PIN. Try again.";
+        error.textContent = "❌ Wrong PIN. Try again.";
       }
     }
-  </script>
 
+    // Show PIN at exactly 12:40 AM
+    function checkTimeForPIN() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+
+      if (hours === 0 && minutes === 40) {
+        document.getElementById("pinOverlay").style.display = "flex";
+      }
+    }
+
+    setInterval(checkTimeForPIN, 10000); // check every 10 seconds
+  </script>
 </body>
 </html>
-Contact For WhatsApp 03319535871
