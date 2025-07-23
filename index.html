@@ -81,10 +81,11 @@
     .note {
       background: #d63031;
       color: white;
-      padding: 15px;
-      border-radius: 10px;
-      font-weight: bold;
-      margin-top: 40px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 30px;
     }
 
     .links {
@@ -101,6 +102,10 @@
       text-decoration: none;
       color: white;
       font-weight: bold;
+    }
+
+    .game-link {
+      background: #e17055;
     }
   </style>
 </head>
@@ -128,23 +133,35 @@
 
   <div class="result-text" id="resultDisplay"></div>
 
-  <!-- Note Section -->
+  <!-- English Note -->
   <div class="note">
-    جس کو 100% ورکنگ ہیک چاہیے وہ گروپ جوائن کرے👇
+    For 100% working trick, join the group below 👇
   </div>
 
+  <!-- Links -->
   <div class="links">
     <a href="https://chat.whatsapp.com/Lr9SzhW6a9x2WqG3LKTax3?mode=ac_c" target="_blank">💬 Join WhatsApp Group</a>
+    <a href="https://www.92coco.fan/#/register?invitationCode=13163791387" target="_blank" class="game-link">🎮 Play Game Now</a>
   </div>
 
   <script>
     let currentSelection = null;
+
     const fixedPattern = [
       "SMALL", "BIG", "BIG", "SMALL", "SMALL", "BIG",
       "SMALL", "BIG", "BIG", "SMALL", "BIG", "SMALL",
       "SMALL", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG"
     ];
-    let patternIndex = 0;
+
+    const secondaryPattern = [
+      "BIG", "BIG", "SMALL", "BIG", "SMALL", "SMALL",
+      "BIG", "SMALL", "BIG", "SMALL", "BIG", "BIG", "BIG",
+      "BIG", "SMALL", "BIG", "SMALL", "BIG", "SMALL", "BIG",
+      "SMALL", "BIG", "SMALL", "SMALL"
+    ];
+
+    let fixedIndex = 0;
+    let secondaryIndex = 0;
 
     function selectTime(btn) {
       document.querySelectorAll('.timer-buttons button').forEach(b => b.classList.remove('active'));
@@ -158,9 +175,20 @@
         return;
       }
 
-      const result = fixedPattern[patternIndex];
+      let result = "";
+
+      if (currentSelection === "1 Minute" || currentSelection === "5 Minutes") {
+        result = fixedPattern[fixedIndex];
+        fixedIndex = (fixedIndex + 1) % fixedPattern.length;
+      } else if (currentSelection === "3 Minutes" || currentSelection === "30 Seconds") {
+        result = secondaryPattern[secondaryIndex];
+        secondaryIndex = (secondaryIndex + 1) % secondaryPattern.length;
+      } else {
+        alert("Invalid selection.");
+        return;
+      }
+
       document.getElementById("resultDisplay").textContent = `✅ Result: ${result}`;
-      patternIndex = (patternIndex + 1) % fixedPattern.length;
 
       const button = document.querySelector(".result-button");
       button.classList.add("clicked");
